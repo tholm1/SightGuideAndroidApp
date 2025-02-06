@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     Button camera_open_id;
     Button obstacleDetection_open_id;
     Button crosswalkDetection_open_id;
+
+    Button obstacleDetectionButton = findViewById(R.id.obstacleDetectionButton);
+    TextSpeechTranslation.initializeSpeechButton(this, obstacleDetectionButton);
+
     ImageView click_image_id;
 
     @Override

@@ -45,4 +45,14 @@ public class TextSpeechTranslation {
             textToSpeech.shutdown();
         }
     }
+    // Method to integrate Text-to-Speech functionality with MainActivity
+    public static void initializeSpeechButton(Context context, android.widget.Button button) {
+        TextSpeechTranslation textSpeechTranslation = new TextSpeechTranslation(context);
+        button.setOnClickListener(v -> {
+            String message = "Obstacle detected ahead. Please proceed with caution.";
+            textSpeechTranslation.speak(message);
+        });
+    }
+}
+
 }
