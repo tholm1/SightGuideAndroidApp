@@ -2,35 +2,31 @@ package com.example.sightguide;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import java.util.Locale;
 
 public class TextSpeechTranslation {
-
     private TextToSpeech textToSpeech;
 
     public TextSpeechTranslation(Context context) {
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = textToSpeech.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Language not supported");
+                    }
+                } else {
+                    Log.e("TTS", "Initialization failed");
                 }
             }
         });
     }
 
     public void speak(String text) {
-        if (textToSpeech != null && !text.isEmpty()) {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-        }
-    }
-
-    public void setLanguage(Locale locale) {
         if (textToSpeech != null) {
-            int result = textToSpeech.setLanguage(locale);
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                System.out.println("Language not supported");
-            }
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
@@ -45,14 +41,4 @@ public class TextSpeechTranslation {
             textToSpeech.shutdown();
         }
     }
-    // Method to integrate Text-to-Speech functionality with MainActivity
-    public static void initializeSpeechButton(Context context, android.widget.Button button) {
-        TextSpeechTranslation textSpeechTranslation = new TextSpeechTranslation(context);
-        button.setOnClickListener(v -> {
-            String message = "Obstacle detected ahead. Please proceed with caution.";
-            textSpeechTranslation.speak(message);
-        });
-    }
-}
-
 }
