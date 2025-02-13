@@ -1,4 +1,6 @@
 package com.example.sightguide;
 
-public class ObjectDetection {
+public class ObjectDetection
+{
+
 }
