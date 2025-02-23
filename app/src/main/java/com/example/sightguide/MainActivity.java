@@ -42,7 +42,9 @@ import com.google.mlkit.vision.objects.DetectedObject.Label;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
@@ -61,6 +63,29 @@ public class MainActivity extends AppCompatActivity
     private static final String PI_BLUETOOTH_ADDRESS = "2C:CF:67:B1:16:F4"; // Raspberry Pi's MAC address
     private static final UUID SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+//    private final ActivityResultLauncher<String[]> activityResultLauncher =
+//            registerForActivityResult(
+//                    new ActivityResultContracts.RequestMultiplePermissions(),
+//                    permissions -> {
+//                        // Handle Permission granted/rejected
+//                        boolean permissionGranted = true;
+//                        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+//                            if (Arrays.asList(REQUIRED_PERMISSIONS).contains(entry.getKey()) && !entry.getValue()) {
+//                                permissionGranted = false;
+//                            }
+//                        }
+//                        if (!permissionGranted) {
+//                            Toast.makeText(getBaseContext(),
+//                                    "Permission request denied",
+//                                    Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            startCamera();
+//                        }
+//                    }
+//            );
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,11 +97,6 @@ public class MainActivity extends AppCompatActivity
         camera_open_id = findViewById(R.id.camera_button);
         documentReadingButton = findViewById(R.id.documentReadingButton);
         click_image_id = findViewById(R.id.click_image);
-        imageView4 = findViewById(R.id.imageView4);
-        textView = findViewById(R.id.textView);
-        Button selectImageButton = findViewById(R.id.selectImageButton);
-
-        selectImageButton.setOnClickListener(v -> pickImage.launch("image/*"));
 
         // Initialize Text-to-Speech
         textSpeechTranslation = new TextSpeechTranslation(this);
@@ -98,31 +118,31 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Bluetooth connection to Raspberry Pi
-        new Thread(() -> {
-            try {
-                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                BluetoothDevice device = bluetoothAdapter.getRemoteDevice(PI_BLUETOOTH_ADDRESS);
-                BluetoothSocket socket = device.createRfcommSocketToServiceRecord(SERIAL_UUID);
-
-                bluetoothAdapter.cancelDiscovery();
-                socket.connect();
-
-                // Receive image data
-                InputStream inputStream = socket.getInputStream();
-                byte[] imageData = inputStream.readAllBytes();
-
-                // Display image in ImageView (convert bytes to Bitmap)
-                runOnUiThread(() -> {
-                    ImageView imageView = findViewById(R.id.imageView);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                    imageView.setImageBitmap(bitmap);
-                });
-
-                socket.close();
-            } catch (Exception e) {
-                Log.e("Bluetooth", "Error: " + e.getMessage());
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//                BluetoothDevice device = bluetoothAdapter.getRemoteDevice(PI_BLUETOOTH_ADDRESS);
+//                BluetoothSocket socket = device.createRfcommSocketToServiceRecord(SERIAL_UUID);
+//
+//                bluetoothAdapter.cancelDiscovery();
+//                socket.connect();
+//
+//                // Receive image data
+//                InputStream inputStream = socket.getInputStream();
+//                byte[] imageData = inputStream.readAllBytes();
+//
+//                // Display image in ImageView (convert bytes to Bitmap)
+//                runOnUiThread(() -> {
+//                    ImageView imageView = findViewById(R.id.imageView);
+//                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+//                    imageView.setImageBitmap(bitmap);
+//                });
+//
+//                socket.close();
+//            } catch (Exception e) {
+//                Log.e("Bluetooth", "Error: " + e.getMessage());
+//            }
+//        }).start();
     }
 
     // Open Camera
@@ -174,79 +194,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // Checks to see if the image has been picked and launches
-    private final ActivityResultLauncher<String> pickImage =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImageSelected);
-
-    // Prompts the user to pick an image for the object detection
-    private void onImageSelected(Uri imageUri) {
-        if (imageUri != null) {
-            try {
-                selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                imageView4.setImageBitmap(selectedImage);
-                runObjectDetection(selectedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void goToSecondActivity(View view)
+    {
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
     }
 
-    // Runs Google ML Kit Object Detection
-    private void runObjectDetection(Bitmap bitmap)
+    public void goToCrosswalkActivity(View view)
     {
-        ObjectDetectorOptions options =
-                new ObjectDetectorOptions.Builder()
-                        .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
-                        .enableMultipleObjects()
-                        .enableClassification()
-                        .build();
-
-        ObjectDetector objectDetector = ObjectDetection.getClient(options);
-        InputImage image = InputImage.fromBitmap(bitmap, 0);
-
-        objectDetector.process(image)
-                .addOnSuccessListener(detectedObjects -> drawBoundingBoxes(detectedObjects, bitmap))
-                .addOnFailureListener(Throwable::printStackTrace);
-    }
-
-    // Draw bounding boxes on objects detected in base configuration
-    private void drawBoundingBoxes(List<DetectedObject> objects, Bitmap bitmap)
-    {
-        Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(mutableBitmap);
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5);
-        Paint textPaint = new Paint();
-        textPaint.setColor(Color.RED);
-        textPaint.setTextSize(50);
-
-        StringBuilder detectedText = new StringBuilder();
-        for (DetectedObject object : objects)
-        {
-            if (object.getBoundingBox() != null)
-            {
-                canvas.drawRect(object.getBoundingBox(), paint);
-            }
-            if (!object.getLabels().isEmpty())
-            {
-                for (Label label : object.getLabels())
-                {
-                    String labelText = label.getText();
-                    float confidence = label.getConfidence();
-                    canvas.drawText(labelText + " (" + confidence + ")",
-                            object.getBoundingBox().left, object.getBoundingBox().top - 10, textPaint);
-                    detectedText.append(labelText).append(" - Confidence: ").append(confidence).append("\n");
-                }
-            }
-            else
-            {
-                detectedText.append("Unknown object detected\n");
-            }
-        }
-
-        imageView4.setImageBitmap(mutableBitmap);
-        textView.setText(detectedText.toString());
+        Intent intent = new Intent(this, CrosswalkActivity.class);
+        startActivity(intent);
     }
 }
