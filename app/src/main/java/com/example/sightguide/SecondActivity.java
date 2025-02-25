@@ -131,6 +131,7 @@ public class SecondActivity extends AppCompatActivity
     {
         @SuppressLint("UnsafeOptInUsageError")
         Image mediaImage = image.getImage();
+
         if (mediaImage != null)
         {
             InputImage inputImage = InputImage.fromMediaImage(mediaImage, image.getImageInfo().getRotationDegrees());
@@ -183,8 +184,7 @@ public class SecondActivity extends AppCompatActivity
         }
     }
 
-    private final ActivityResultLauncher<String> pickImage =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImageSelected);
+    private final ActivityResultLauncher<String> pickImage = registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImageSelected);
 
     // Prompts the user to pick an image for the object detection
     private void onImageSelected(Uri imageUri)
@@ -261,7 +261,7 @@ public class SecondActivity extends AppCompatActivity
 
     private void drawBoundingBox(List<DetectedObject> detectedObjects)
     {
-        runOnUiThread(() -> overlayView.setDetectedObjects(detectedObjects));
+        runOnUiThread(()->overlayView.setDetectedObjects(detectedObjects));
     }
 
     public void goBack(View view)

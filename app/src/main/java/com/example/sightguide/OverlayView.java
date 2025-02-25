@@ -14,12 +14,14 @@ import com.google.mlkit.vision.objects.DetectedObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OverlayView extends View {
+public class OverlayView extends View
+{
     private final Paint boxPaint;
     private final Paint textPaint;
     private List<DetectedObject> detectedObjects = new ArrayList<>();
 
-    public OverlayView(Context context, AttributeSet attrs) {
+    public OverlayView(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
         boxPaint = new Paint();
         boxPaint.setColor(Color.RED);
@@ -39,12 +41,15 @@ public class OverlayView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
-        for (DetectedObject obj : detectedObjects) {
+        for (DetectedObject obj : detectedObjects)
+        {
             Rect box = obj.getBoundingBox();
             canvas.drawRect(box, boxPaint);
-            for (DetectedObject.Label label : obj.getLabels()) {
+            for (DetectedObject.Label label : obj.getLabels())
+            {
                 String text = label.getText() + " (" + label.getConfidence() + ")";
                 canvas.drawText(text, box.left, box.top - 10, textPaint);
             }
