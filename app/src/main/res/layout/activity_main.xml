@@ -37,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload Audio File"
+        android:onClick="goToAudioUpload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload Image File"
+        android:onClick="goToPIImageUpload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -127,13 +129,14 @@
 
     <Button
         android:id="@+id/documentReadingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Document Reading"
-        android:padding="12dp"
-        android:minWidth="200dp"
+        android:layout_width="159dp"
+        android:layout_height="56dp"
         android:contentDescription="Button to start document reading"
         android:elevation="4dp"
+        android:minWidth="200dp"
+        android:onClick="goToTTSActivity"
+        android:padding="12dp"
+        android:text="Text To Speech"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +154,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.903" />
+        app:layout_constraintVertical_bias="0.976" />
 
     <ImageView
         android:id="@+id/click_image"
@@ -161,5 +164,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/speechToTextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speech to Text"
+        android:onClick="goToSpeechIntoText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.894" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

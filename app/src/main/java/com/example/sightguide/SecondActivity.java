@@ -35,7 +35,6 @@ public class SecondActivity extends AppCompatActivity
     private ImageView click_image_2;
     private TextView textView2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
