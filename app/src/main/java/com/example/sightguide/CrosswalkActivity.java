@@ -9,10 +9,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class CrosswalkActivity extends AppCompatActivity {
+public class CrosswalkActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_crosswalk);
@@ -22,8 +24,6 @@ public class CrosswalkActivity extends AppCompatActivity {
             return insets;
         });
     }
-
-
 
     public void goBack(View view)
     {
