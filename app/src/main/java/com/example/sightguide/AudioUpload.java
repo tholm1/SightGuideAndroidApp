@@ -52,6 +52,46 @@ public class AudioUpload extends AppCompatActivity
 //    }
 //};
 
+    // Ensure filePath is initialized
+//    private String filePath = "/storage/emulated/0/Download/audio.mp3";  // Update with actual path
+//
+//    File audioFile = new File(filePath);
+//    if (!audioFile.exists())
+//    {
+//        Log.e("Upload", "File does not exist: " + filePath);
+//        return;
+//    }
+//
+//    // Determine the correct MIME type dynamically
+//    String mimeType = URLConnection.guessContentTypeFromName(audioFile.getName());
+//    if (mimeType == null) mimeType = "application/octet-stream";  // Fallback MIME type
+//
+//    // Create RequestBody
+//    RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), audioFile);
+//    MultipartBody.Part body = MultipartBody.Part.createFormData("audio", audioFile.getName(), requestFile);
+//
+//    // Retrofit call
+//    Call<ResponseBody> call = service.uploadAudio(body);
+//    call.enqueue(new Callback<ResponseBody>() {
+//    @Override
+//    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//        if (response.isSuccessful())
+//        {
+//            Log.d("Upload", "Success");
+//        }
+//        else
+//        {
+//            Log.e("Upload", "Server Error: " + response.code());
+//        }
+//    }
+//
+//    @Override
+//    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//        Log.e("Upload", "Error", t);
+//    }
+//});
+
+
     public void goBack(View view)
     {
         finish();
